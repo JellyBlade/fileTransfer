@@ -1,5 +1,6 @@
 #include <deque>
 #include <vector>
+#include <algorithm>
 
 #include "SlidingWindow.h"
 #include "SequenceNumber.h"
@@ -17,8 +18,24 @@ void SelectiveRepeatReceiver::receive(int s) {
   if (s <= getAcknowledgable()) { return; }
   if (s == getAcknowledgable() + 1) {
     window->advance(s);
+    std::sort(disorderedSeqs.begin(), disorderedSeqs.end());
+    int previous = s;
+    for (int i = 0; i < disorderedSeqs.size(); i++) {
+      int seqToCheck = disorderedSeqs.at(i);
+      if (seqToCheck == previous + 1) {
+        disorderedSeqs.erase(disorderedSeqs.begin() + i);
+        window->advance(seqToCheck);
+        previous = seqToCheck;
+        i--;
+      } else {
+        // if it's not in order, then there's no point checking the rest.
+        return;
+      }
+    }
   } else {
-    disorderedSeqs.push_back(s);
+    if (std::find(disorderedSeqs.begin(), disorderedSeqs.end(), s) == disorderedSeqs.end()) {
+      disorderedSeqs.push_back(s);
+    }
   }
 }
 
