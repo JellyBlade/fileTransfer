@@ -1,27 +1,29 @@
-#ifndef SlidingWindowSender_H
-#define SlidingWindowSender_H
+#ifndef SLIDING_WINDOW_H
+#define SLIDING_WINDOW_H
 
 #include <deque>
-#include <vector>
 
-struct SequenceNumber {
-  int sequence;
-  bool received;
-};
+#include <SequenceNumber.h>
 
-class SlidingWindowSender {
+class SlidingWindow {
  public:
   /**
-   * @brief Construct a new Sliding Window object with a sequence length of b bits.
+   * @brief Construct a new Sliding Window with a sequence length of b bits.
    * 
    * @param b number of bits to use for the sequence number. Default: 8
    */
-  SlidingWindowSender(int b = 8);
+  SlidingWindow(int b = 8);
+
+  /**
+   * @brief Destroy the Sliding Window and all SequenceNumbers in it.
+   * 
+   */
+  ~SlidingWindow();
 
   /**
    * @brief checks if there is an empty space in the sliding window.
    * 
-   * @return true if there is space in the sliding window to add a frame.
+   * @return true if there is space in the sliding window to add a sequence number.
    * @return false otherwise.
    */
   bool canAdvance();
@@ -29,11 +31,25 @@ class SlidingWindowSender {
   /**
    * @brief advances the sliding window by one position if possible, and returns
    * the new sequence number.
+   * Returns -1 if the sliding window cannot advance.
    * 
    * @return int - new sequence position. Returns -1 if the sliding window cannot
    * advance. 
    */
   int advance();
+
+  /**
+   * @brief advances the sliding window by one position if possible, setting the
+   * new sequence number to s.
+   * If s is larger than the max allowed sequence number, it will be equal to
+   * s % (maximum sequence number size)
+   * Returns -1 if the sliding window cannot advance.
+   * 
+   * @param s sequence number to use.
+   * @return int - new sequence number. Returns -1 if the sliding window cannot
+   * advance.
+   */
+  int advance(int s);
 
   /**
    * @brief Set the size of the sliding window. If n is larger than 2^b-1, where
@@ -52,33 +68,21 @@ class SlidingWindowSender {
    * @param b number of bits to use for the sequence number.
    */
   void setBitSize(int b);
-  
-  /**
-   * @brief acknowledge sequence s has been received, possibly removing 
-   * sequence(s) from the sliding window.
-   * Functionality for Sender.
-   * 
-   * @param s sequence to acknowledge.
-   * @param received list of out-of-order sequences received by the receiver.
-   * @return true if the acknowledgement removed any sequence(s) from the window.
-   * @return false otherwise.
-   */
-  bool acknowledge(int s, std::vector<int> received);
 
-  /**
+    /**
    * @brief Returns the number of unacknowledged sequences in the sliding window.
    * 
-   * @see getWindowSequences()
+   * @see SlidingWindow::getWindowSequences()
    * @return int - number of unacknowledged sequences in the window.
    */
   int seqCount();
 
-  /**
-   * @brief Returns a copy of the vector containing the unacknowledged sequence numbers in 
+    /**
+   * @brief Returns a pointer to the deque containing the unacknowledged sequence numbers in 
    * the sliding window.
-   * @return std::vector<int> - vector containing unacknowledged sequence numbers.
+   * @return std::deque<SequenceNumber>* - deque containing unacknowledged sequence numbers.
    */
-  std::deque<SequenceNumber> getWindowSequences();
+  std::deque<SequenceNumber*>* getWindowSequences();
 
   /**
    * @brief Returns the current highest sequence position.
@@ -90,9 +94,9 @@ class SlidingWindowSender {
  private:
   int bitSize;
   int windowSize = 0;
+  int maxSeq = 0;
   int currentSeq = 0;
-  int maxSeq;
-  std::deque<SequenceNumber> windowSequences;
+  std::deque<SequenceNumber*>* windowSequences;
 };
 
-#endif // SlidingWindowSender_H
+#endif // SLIDING_WINDOW_H
