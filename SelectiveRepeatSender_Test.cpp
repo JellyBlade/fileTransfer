@@ -1,5 +1,6 @@
 #include "SelectiveRepeatSender.h"
 #include "gtest/gtest.h"
+#include <iostream>
 
 class SenderTest : public testing::Test {
  protected:
@@ -14,6 +15,14 @@ class SenderTest : public testing::Test {
   }
 };
 
-TEST_F(SenderTest, testTest) {
-  EXPECT_EQ(1, 1);
+TEST_F(SenderTest, sendTest) {
+  EXPECT_EQ(srs->send(), -1);
+  EXPECT_TRUE(srs->prepareNext());
+  EXPECT_EQ(srs->send(), 0);
+  srs->prepareNext();
+  srs->prepareNext();
+  std::vector<int> seqs = srs->sendAll();
+  EXPECT_EQ(seqs.size(), 2);
+  EXPECT_EQ(srs->send(), -1);
+  // wip, please finish me :)
 }

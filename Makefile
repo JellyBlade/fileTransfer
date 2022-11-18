@@ -3,7 +3,7 @@ TESTLIBS = -lgtest  -lgtest_main -lpthread
 OBJS = $(wildcard *.cpp)
 
 testSH: $(OBJS)
-	$(CC) -o $@  $(OBJS) $(TESTLIBS)
+	$(CC) -o $@ $(OBJS) $(TESTLIBS)
 
 %.o : %.cc
 	$(CC) $(CCFLAGS) -c $<
@@ -12,7 +12,7 @@ testSH: $(OBJS)
 
 .PHONY : clean
 clean :
-	rm -f *.o *~ *.d testSH
+	rm -f *.o *~ *.d testSH *.gcov *.gcno *.gcda
 
 
 ## include the generated dependency files
