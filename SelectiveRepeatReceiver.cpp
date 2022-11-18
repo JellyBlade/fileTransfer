@@ -51,6 +51,7 @@ int SelectiveRepeatReceiver::deliver() {
     // if not delivered
     if (!seq->received) {
       int deliverSeq = seq->sequence;
+      seq->received = true;
       // if acknowledged, delete. This might come back to haunt us.
       if (seq->sent) {
         seqs->erase(seqs->begin() + i);
