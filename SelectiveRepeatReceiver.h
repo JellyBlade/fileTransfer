@@ -69,6 +69,8 @@ class SelectiveRepeatReceiver {
    */
   ReceiverAck acknowledge();
 
+  SlidingWindow* getWindow();
+
  private:
   std::vector<int> disorderedSeqs;
   SlidingWindow* window;

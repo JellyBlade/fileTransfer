@@ -90,3 +90,7 @@ ReceiverAck SelectiveRepeatReceiver::acknowledge() {
   }
   return (ReceiverAck) {-1, disorderedSeqs};
 }
+
+SlidingWindow* SelectiveRepeatReceiver::getWindow() {
+  return window;
+}
