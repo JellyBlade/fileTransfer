@@ -19,12 +19,14 @@ int SelectiveRepeatSender::send() {
 }
 
 int SelectiveRepeatSender::send(int i) {
-  SequenceNumber* seq = window->getWindowSequences()->at(i);
+  auto seqs = window->getWindowSequences();
+  if (seqs->size() < 1) { return -1; }
+  SequenceNumber* seq = seqs->at(i);
   while (seq->sent) {
-    if (++i >= window->getWindowSequences()->size()) {
+    if (++i >= seqs->size()) {
       return -1;
     }
-    seq = window->getWindowSequences()->at(i);
+    seq = seqs->at(i);
   }
   seq->sent = true;
   return seq->sequence;
