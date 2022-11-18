@@ -5,7 +5,9 @@
 #include "SlidingWindow.h"
 
 SlidingWindow::SlidingWindow(int b) : bitSize{b} {
+  windowSequences = new std::deque<SequenceNumber*>;
   maxSeq = pow(2, b) - 1;
+  windowSize = b;
 }
 
 SlidingWindow::~SlidingWindow() {
@@ -27,16 +29,9 @@ bool SlidingWindow::canAdvance() {
 
 int SlidingWindow::advance() {
   if (canAdvance()) {
-    // mod maxSeq + 1 to allow for currentSeq = maxSeq
-    windowSequences->push_back(new (SequenceNumber) {++currentSeq % (maxSeq + 1), false, false});
+    currentSeq = (currentSeq + 1) % (maxSeq + 1);
+    windowSequences->push_back(new (SequenceNumber) {currentSeq, false, false});
     return currentSeq;
-  }
-  return -1;
-}
-
-int SlidingWindow::advance(int s) {
-  if (canAdvance()) {
-    windowSequences->push_back(new (SequenceNumber) {s % (maxSeq + 1), false, false});
   }
   return -1;
 }
@@ -49,12 +44,17 @@ void SlidingWindow::setWindowSize(int n) {
   }
 }
 
+int SlidingWindow::getWindowSize() {
+  return windowSize;
+}
+
 void SlidingWindow::setBitSize(int b) {
-  int newMax = pow(2, b) - 1;
+  maxSeq = pow(2, b) - 1;
   bitSize = b;
-  if (currentSeq > newMax) {
-    currentSeq = newMax;
-  }
+}
+
+int SlidingWindow::getBitSize() {
+  return bitSize;
 }
 
 std::deque<SequenceNumber*>* SlidingWindow::getWindowSequences() {

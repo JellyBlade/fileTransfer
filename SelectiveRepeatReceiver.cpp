@@ -1,6 +1,7 @@
 #include <deque>
 #include <vector>
 #include <algorithm>
+#include <stdexcept>
 
 #include "SlidingWindow.h"
 #include "SequenceNumber.h"
@@ -15,22 +16,16 @@ SelectiveRepeatReceiver::~SelectiveRepeatReceiver() {
 }
 
 void SelectiveRepeatReceiver::receive(int s) {
-  if (s <= getAcknowledgable()) { return; }
-  if (s == getAcknowledgable() + 1) {
-    window->advance(s);
+  if (s <= window->getCurrentSequence()) { return; }
+  if (s == window->getCurrentSequence() + 1) {
+    int ws = window->advance();
+    if (s != ws) {
+      throw std::runtime_error("Expected sequence " + std::to_string(s) + ", got " + std::to_string(ws));
+    }
     std::sort(disorderedSeqs.begin(), disorderedSeqs.end());
-    int previous = s;
-    for (int i = 0; i < disorderedSeqs.size(); i++) {
-      int seqToCheck = disorderedSeqs.at(i);
-      if (seqToCheck == previous + 1) {
-        disorderedSeqs.erase(disorderedSeqs.begin() + i);
-        window->advance(seqToCheck);
-        previous = seqToCheck;
-        i--;
-      } else {
-        // if it's not in order, then there's no point checking the rest.
-        return;
-      }
+    while (disorderedSeqs.size() > 0 && disorderedSeqs.at(0) == ++ws) {
+      disorderedSeqs.erase(disorderedSeqs.begin());
+      window->advance();
     }
   } else {
     if (std::find(disorderedSeqs.begin(), disorderedSeqs.end(), s) == disorderedSeqs.end()) {
@@ -69,25 +64,23 @@ int SelectiveRepeatReceiver::deliver() {
 
 int SelectiveRepeatReceiver::getAcknowledgable() {
   std::deque<SequenceNumber*>* seqs = window->getWindowSequences();
-  int toAck = -1;
   for (int i = 0; i < seqs->size(); i++) {
     SequenceNumber* seq = seqs->at(i);
     if (!seq->sent) {
-      toAck = seq->sequence;
+      return seq->sequence;
     }
   }
-  return toAck;
+  return -1;
 }
 
 ReceiverAck SelectiveRepeatReceiver::acknowledge() {
   std::deque<SequenceNumber*>* seqs = window->getWindowSequences();
-  int toAck = -1;
   for (int i = 0; i < seqs->size(); i++) {
     SequenceNumber* seq = seqs->at(i);
     if (!seq->sent) {
       seq->sent = true;
-      toAck = seq->sequence;
+      return (ReceiverAck) {seq->sequence, disorderedSeqs};
     }
   }
-  return (ReceiverAck) {toAck, disorderedSeqs};
+  return (ReceiverAck) {-1, disorderedSeqs};
 }

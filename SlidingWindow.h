@@ -9,7 +9,7 @@ class SlidingWindow {
  public:
   /**
    * @brief Construct a new Sliding Window with a sequence length of b bits.
-   * 
+   * Sets the windowSize to b. Use setWindowSize() to specify a larger window.
    * @param b number of bits to use for the sequence number. Default: 8
    */
   SlidingWindow(int b = 8);
@@ -30,26 +30,14 @@ class SlidingWindow {
 
   /**
    * @brief advances the sliding window by one position if possible, and returns
-   * the new sequence number.
+   * the new sequence number. Will try its best to fill in gaps in the sequence
+   * introduced by advance(int s) wherever possible.
    * Returns -1 if the sliding window cannot advance.
    * 
    * @return int - new sequence position. Returns -1 if the sliding window cannot
    * advance. 
    */
   int advance();
-
-  /**
-   * @brief advances the sliding window by one position if possible, setting the
-   * new sequence number to s.
-   * If s is larger than the max allowed sequence number, it will be equal to
-   * s % (maximum sequence number size)
-   * Returns -1 if the sliding window cannot advance.
-   * 
-   * @param s sequence number to use.
-   * @return int - new sequence number. Returns -1 if the sliding window cannot
-   * advance.
-   */
-  int advance(int s);
 
   /**
    * @brief Set the size of the sliding window. If n is larger than 2^b-1, where
@@ -60,16 +48,18 @@ class SlidingWindow {
    */
   void setWindowSize(int n);
 
+  int getWindowSize();
+
   /**
    * @brief Set the number of bits the sliding window will use for its sequence.
-   * If the current sequence is greater than 2^b-1, the current sequence will
-   * set to 2^b-1.
    * 
    * @param b number of bits to use for the sequence number.
    */
   void setBitSize(int b);
 
-    /**
+  int getBitSize();
+
+   /**
    * @brief Returns the number of unacknowledged sequences in the sliding window.
    * 
    * @see SlidingWindow::getWindowSequences()
@@ -95,7 +85,7 @@ class SlidingWindow {
   int bitSize;
   int windowSize = 0;
   int maxSeq = 0;
-  int currentSeq = 0;
+  int currentSeq = -1;
   std::deque<SequenceNumber*>* windowSequences;
 };
 
