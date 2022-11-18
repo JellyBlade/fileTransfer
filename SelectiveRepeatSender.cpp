@@ -6,7 +6,7 @@
 #include "SelectiveRepeatSender.h"
 #include "SelectiveRepeatReceiver.h"
 
-SelectiveRepeatSender::SelectiveRepeatSender(int b = 8) {
+SelectiveRepeatSender::SelectiveRepeatSender(int b) {
   window = new SlidingWindow(b);
 };
 

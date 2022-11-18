@@ -1,10 +1,10 @@
 #include <cmath>
 #include <deque>
 
-#include <SequenceNumber.h>
-#include <SlidingWindow.h>
+#include "SequenceNumber.h"
+#include "SlidingWindow.h"
 
-SlidingWindow::SlidingWindow(int b = 8) : bitSize{b} {
+SlidingWindow::SlidingWindow(int b) : bitSize{b} {
   maxSeq = pow(2, b) - 1;
 }
 

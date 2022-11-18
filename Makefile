@@ -1,6 +1,6 @@
 CC = g++
 TESTLIBS = -lgtest  -lgtest_main -lpthread
-OBJS = headerManager.o test_headerManager.o
+OBJS = $(wildcard *.cpp)
 
 testSH: $(OBJS)
 	$(CC) -o $@  $(OBJS) $(TESTLIBS)
@@ -12,7 +12,7 @@ testSH: $(OBJS)
 
 .PHONY : clean
 clean :
-	rm -f *.o *~ *.d
+	rm -f *.o *~ *.d testSH
 
 
 ## include the generated dependency files
