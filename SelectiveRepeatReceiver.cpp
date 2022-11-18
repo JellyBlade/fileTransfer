@@ -17,7 +17,7 @@ SelectiveRepeatReceiver::~SelectiveRepeatReceiver() {
 
 void SelectiveRepeatReceiver::receive(int s) {
   if (s <= window->getCurrentSequence()) { return; }
-  if (s == window->getCurrentSequence() + 1) {
+  if (s == window->getCurrentSequence() + 1 && window->canAdvance()) {
     int ws = window->advance();
     if (s != ws) {
       throw std::runtime_error("Expected sequence " + std::to_string(s) + ", got " + std::to_string(ws));
