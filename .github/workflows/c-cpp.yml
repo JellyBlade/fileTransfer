@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-
+    name: Build and Run Tests
     runs-on: ubuntu-latest
 
     steps:
@@ -17,5 +17,7 @@ jobs:
       run: sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make && sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a && sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
     - name: make testSH
       run: make testSH
+    - name: run test
+      run: ./testSH
     - name: make clean
       run: make clean
