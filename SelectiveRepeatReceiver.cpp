@@ -80,7 +80,12 @@ ReceiverAck SelectiveRepeatReceiver::acknowledge() {
     SequenceNumber* seq = seqs->at(i);
     if (!seq->sent) {
       seq->sent = true;
-      return (ReceiverAck) {seq->sequence, disorderedSeqs};
+      ReceiverAck ack = (ReceiverAck) {seq->sequence, disorderedSeqs};
+      if (seq->received) {
+        seqs->erase(seqs->begin() + i);
+        delete seq;
+      }
+      return ack;
     }
   }
   return (ReceiverAck) {-1, disorderedSeqs};
