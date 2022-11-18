@@ -67,13 +67,15 @@ int SelectiveRepeatReceiver::getAcknowledgable() {
   std::deque<SequenceNumber*>* seqs = window->getWindowSequences();
   for (int i = 0; i < seqs->size(); i++) {
     SequenceNumber* seq = seqs->at(i);
-    if (seqs->size() > i + i && seqs->at(i+1) == seq->sequence + 1) {
+    if (seqs->size() > i + i && seqs->at(i+1)->sequence == seq->sequence + 1) {
       continue;
     } else if (!seq->sent) {
       return seq->sequence;
+    }
   }
   return lastAck;
 }
+
 
 ReceiverAck SelectiveRepeatReceiver::acknowledge() {
   std::deque<SequenceNumber*>* seqs = window->getWindowSequences();
