@@ -72,6 +72,7 @@ class SelectiveRepeatReceiver {
   SlidingWindow* getWindow();
 
  private:
+  int lastAck = -1;
   std::vector<int> disorderedSeqs;
   SlidingWindow* window;
 };

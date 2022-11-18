@@ -67,11 +67,12 @@ int SelectiveRepeatReceiver::getAcknowledgable() {
   std::deque<SequenceNumber*>* seqs = window->getWindowSequences();
   for (int i = 0; i < seqs->size(); i++) {
     SequenceNumber* seq = seqs->at(i);
-    if (!seq->sent) {
+    if (seqs->size() > i + i && seqs->at(i+1) == seq->sequence + 1) {
+      continue;
+    } else if (!seq->sent) {
       return seq->sequence;
-    }
   }
-  return -1;
+  return lastAck;
 }
 
 ReceiverAck SelectiveRepeatReceiver::acknowledge() {
@@ -93,10 +94,11 @@ ReceiverAck SelectiveRepeatReceiver::acknowledge() {
         seqs->erase(seqs->begin() + i);
         delete seq;
       }
+      lastAck = ack.sequence;
       return ack;
     }
   }
-  return (ReceiverAck) {-1, disorderedSeqs};
+  return (ReceiverAck) {lastAck, disorderedSeqs};
 }
 
 SlidingWindow* SelectiveRepeatReceiver::getWindow() {
