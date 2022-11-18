@@ -10,9 +10,5 @@ TEST_F(SlidingWindowTest, testTest) {
   EXPECT_EQ(1, 1);
 }
 
-TEST_F(SlidingWindowTest, brokenTest) {
-  EXPECT_EQ(1, 0);
-}
-
 
 
