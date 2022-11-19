@@ -80,4 +80,9 @@ TEST_F(SenderTest, ackSenderTest) {
   srs->prepareNext();
   EXPECT_TRUE(srs->acknowledge((ReceiverAck) {7, {}}));
   EXPECT_FALSE(srs->acknowledge((ReceiverAck) {9, {}}));
+  srs->prepareNext();
+  srs->prepareNext();
+  srs->prepareNext();
+  EXPECT_TRUE(srs->acknowledge((ReceiverAck) {8, {10}}));
+  EXPECT_TRUE(srs->acknowledge((ReceiverAck) {10, {}}));
 }
