@@ -67,6 +67,7 @@ bool SelectiveRepeatSender::acknowledge(ReceiverAck ack) {
   int s = ack.sequence;
   std::vector<int> disorderedSeqs = ack.disorderedSeqs;
   std::deque<SequenceNumber*>* windowSequences = window->getWindowSequences();
+  if (windowSequences->empty()) { return false; }
   SequenceNumber* seq = windowSequences->front();
   if (s == seq->sequence) {
     windowSequences->pop_front();
