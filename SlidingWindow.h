@@ -30,8 +30,7 @@ class SlidingWindow {
 
   /**
    * @brief advances the sliding window by one position if possible, and returns
-   * the new sequence number. Will try its best to fill in gaps in the sequence
-   * introduced by advance(int s) wherever possible.
+   * the new sequence number.
    * Returns -1 if the sliding window cannot advance.
    * 
    * @return int - new sequence position. Returns -1 if the sliding window cannot
@@ -48,6 +47,11 @@ class SlidingWindow {
    */
   void setWindowSize(int n);
 
+  /**
+   * @brief Returns the size of the sliding window.
+   * 
+   * @return int - sliding window size
+   */
   int getWindowSize();
 
   /**
@@ -57,27 +61,32 @@ class SlidingWindow {
    */
   void setBitSize(int b);
 
+  /**
+   * @brief Returns the int representing the number of bits to be used by the
+   * sequence number.
+   * 
+   * @return int - number of bits to use for the sequence number when encoded.
+   */
   int getBitSize();
 
    /**
-   * @brief Returns the number of unacknowledged sequences in the sliding window.
+   * @brief Returns the number of sequence numbers in the sliding window.
    * 
-   * @see SlidingWindow::getWindowSequences()
-   * @return int - number of unacknowledged sequences in the window.
+   * @return int - number of sequence numbers in the window.
    */
   int seqCount();
 
     /**
-   * @brief Returns a pointer to the deque containing the unacknowledged sequence numbers in 
+   * @brief Returns a pointer to the deque containing the sequence numbers in 
    * the sliding window.
-   * @return std::deque<SequenceNumber>* - deque containing unacknowledged sequence numbers.
+   * @return std::deque<SequenceNumber>* - deque containing sequence numbers.
    */
   std::deque<SequenceNumber*>* getWindowSequences();
 
   /**
-   * @brief Returns the current highest sequence position.
+   * @brief Returns the highest number in the sequence.
    * 
-   * @return int - current highest sequence position
+   * @return int - highest number in the sequence
    */
   int getCurrentSequence();
 

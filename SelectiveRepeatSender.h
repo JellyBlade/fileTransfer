@@ -5,7 +5,6 @@
 
 #include "SlidingWindow.h"
 #include "SequenceNumber.h"
-// ReceiverAck struct. Maybe should move it to it's own header?
 #include "SelectiveRepeatReceiver.h"
 
 
@@ -19,7 +18,8 @@ class SelectiveRepeatSender {
   SelectiveRepeatSender(int b = 8);
 
   /**
-   * @brief Destroy the Selective Repeat Sender
+   * @brief Destroy the Selective Repeat Sender, deleting the sliding window and
+   * all sequence numbers contained.
    * 
    */
   ~SelectiveRepeatSender();
@@ -40,7 +40,7 @@ class SelectiveRepeatSender {
   std::vector<int> sendAll();
 
   /**
-   * @brief Gets the number of sent sequence numbers that haven't been ack'd.
+   * @brief Gets the number of sent sequence numbers that haven't been acknowledged.
    * 
    * @return int number of unack'd sent sequence numbers.
    */
@@ -57,7 +57,6 @@ class SelectiveRepeatSender {
   /**
    * @brief acknowledge ack.sequence has been received, possibly removing 
    * sequence(s) from the sliding window.
-   * Functionality for Sender.
    * 
    * @param ack struct containing the ack'd sequence and a list of out-of-order received sequences.
    * @return true if the acknowledgement removed any sequence(s) from the window.
