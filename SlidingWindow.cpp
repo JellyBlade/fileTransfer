@@ -11,12 +11,12 @@ SlidingWindow::SlidingWindow(int b) : bitSize{b} {
 }
 
 SlidingWindow::~SlidingWindow() {
-  int delCount = windowSequences->size();
-  for (int i = 0; i < delCount; i++) {
-    SequenceNumber* delSeq = windowSequences->front();
-    windowSequences->pop_front();
+  while(!windowSequences->empty()) {
+    SequenceNumber* delSeq = windowSequences->back();
+    windowSequences->pop_back();
     delete delSeq;
   }
+  delete windowSequences;
 }
 
 int SlidingWindow::seqCount() {

@@ -3,7 +3,7 @@ TESTLIBS = -lgtest  -lgtest_main -lpthread
 OBJS = $(wildcard *.cpp)
 
 testSH: $(OBJS)
-	$(CC) -o $@ $(OBJS) $(TESTLIBS)
+	$(CC) -g -o $@ $(OBJS) $(TESTLIBS)
 
 %.o : %.cc
 	$(CC) $(CCFLAGS) -c $<

@@ -68,12 +68,13 @@ bool SelectiveRepeatSender::acknowledge(ReceiverAck ack) {
   std::vector<int> disorderedSeqs = ack.disorderedSeqs;
   std::deque<SequenceNumber*>* windowSequences = window->getWindowSequences();
   if (windowSequences->empty()) { return false; }
-  SequenceNumber* seq = windowSequences->front();
-  if (s == seq->sequence) {
+  int seqNum = windowSequences->front()->sequence;
+  if (s == seqNum) {
+    SequenceNumber* delSeq = windowSequences->front();
     windowSequences->pop_front();
-    delete seq;
-  } else if (s > seq->sequence) {
-    int delCount = s - seq->sequence;
+    delete delSeq;
+  } else if (s > seqNum && windowSequences->size() >= s - seqNum) {
+    int delCount = s - seqNum;
     for (int i = 0; i < delCount; i++) {
       SequenceNumber* delSeq = windowSequences->front();
       windowSequences->pop_front();
@@ -81,13 +82,12 @@ bool SelectiveRepeatSender::acknowledge(ReceiverAck ack) {
     }
   } else { return false; }
   // Remove any sent and acknowledged sequence numbers to free up window space.
-  for (int i = 0; i < windowSequences->size(); i++) {
-    if (windowSequences->at(i)->received) {
-      SequenceNumber* delSeq = windowSequences->at(i);
-      windowSequences->erase(windowSequences->begin() + i);
+  for (auto it = windowSequences->begin(); it != windowSequences->end();) {
+    if ((*it)->received) {
+      SequenceNumber* delSeq = (*it);
+      it = windowSequences->erase(it);
       delete delSeq;
-      i--;
-    }
+    } else { ++it; }
   }
   // Set sequence numbers in the window to transmitted to show they've been
   // properly received by the receiver.

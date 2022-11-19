@@ -7,9 +7,9 @@
  * delivering the sequence numbers.
  */
 struct SequenceNumber {
-  int sequence;
-  bool received;
-  bool sent;
+  int sequence = 0;
+  bool received = false;
+  bool sent = false;
 };
 
 #endif // SEQUENCE_NUMBER_H
