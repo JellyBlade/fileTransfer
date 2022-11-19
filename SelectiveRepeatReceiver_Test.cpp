@@ -96,8 +96,3 @@ TEST_F(ReceiverTest, getAckTest) {
   srp->receive(2);
   EXPECT_EQ(srp->getAcknowledgable(), 3);
 }
-
-TEST_F(ReceiverTest, getWindowTest) {
-  auto w = new SlidingWindow;
-  EXPECT_TRUE((typeid(srp->getWindow()) == typeid(w))); // gets a window! great!
-}
