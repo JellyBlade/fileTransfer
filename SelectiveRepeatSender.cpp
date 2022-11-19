@@ -45,7 +45,7 @@ std::vector<int> SelectiveRepeatSender::sendAll() {
 
 int SelectiveRepeatSender::getSentCount() {
   std::deque<SequenceNumber*>* seqs = window->getWindowSequences();
-  int count;
+  int count = 0;
   for (int i = 0; i < seqs->size(); i++) {
     if (seqs->at(i)->sent) {
       count++;
