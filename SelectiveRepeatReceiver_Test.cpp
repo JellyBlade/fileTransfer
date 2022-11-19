@@ -41,6 +41,7 @@ TEST_F(ReceiverTest, receiveTest) {
   EXPECT_FALSE(srp->getDeliverableSeq() == 255);
   srp->receive(999);
   EXPECT_FALSE(srp->getDeliverableSeq() == 999);
+  delete srs;
 }
 
 TEST_F(ReceiverTest, getDeliverableSeqInit) {
@@ -52,6 +53,7 @@ TEST_F(ReceiverTest, getDeliverableSeqInit) {
     EXPECT_EQ(srp->getDeliverableSeq(), i);
     srp->deliver();
   }
+  delete srs;
 }
 
 TEST_F(ReceiverTest, deliverTest) {

@@ -73,7 +73,7 @@ TEST_F(SenderTest, ackSenderTest) {
   srs->prepareNext();
   EXPECT_FALSE(srs->acknowledge((ReceiverAck) {1, {}}));
   EXPECT_TRUE(srs->acknowledge((ReceiverAck) {2, {}}));
-  srs->prepareNext(); // ack(4 [6,7])
+  srs->prepareNext();
   srs->prepareNext();
   srs->prepareNext();
   srs->prepareNext();
