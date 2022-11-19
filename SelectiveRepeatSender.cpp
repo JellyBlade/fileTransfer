@@ -100,9 +100,3 @@ bool SelectiveRepeatSender::acknowledge(ReceiverAck ack) {
   }
   return true;
 }
-
-
-sender -> 1234567
-receiver <- 1234 67 -> ack(4, [6, 7]);
-sender <- ack(4, [6,7])
-sender -> 589 10 11

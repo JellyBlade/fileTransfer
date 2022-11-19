@@ -28,7 +28,6 @@ TEST_F(ReceiverTest, receiveTest) {
   }
   srp->receive(srs->send());
   srs->prepareNext();
-  EXPECT_EQ(srp->getWindow()->getCurrentSequence(), 7);
   srs->prepareNext();
   srp->receive(8);
   srp->receive(9);
