@@ -2,6 +2,10 @@
 #include "gtest/gtest.h"
 #include <iostream>
 
+/**
+ * @brief Tests for SelectiveRepeatSender
+ * 
+ */
 class SenderTest : public testing::Test {
  protected:
   SelectiveRepeatSender* srs;

@@ -3,6 +3,10 @@
 
 #include <iostream>
 
+/**
+ * @brief Tests for SlidingWindow
+ * 
+ */
 class SlidingWindowTest : public testing::Test {
  protected:
   SlidingWindow* sw;

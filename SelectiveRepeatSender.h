@@ -7,7 +7,10 @@
 #include "SequenceNumber.h"
 #include "SelectiveRepeatReceiver.h"
 
-
+/**
+ * @brief The sender portion of frame header's sequence number management according
+ * to selective repeat sliding window protocol.
+ */
 class SelectiveRepeatSender {
  public:
   /**

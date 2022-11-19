@@ -5,6 +5,10 @@
 
 #include "SequenceNumber.h"
 
+/**
+ * @brief Stores and manages sequence numbers according to selective repeat
+ * sliding window protocol for use in frame headers.
+ */
 class SlidingWindow {
  public:
   /**

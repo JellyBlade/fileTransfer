@@ -15,6 +15,10 @@ struct ReceiverAck {
   std::vector<int> disorderedSeqs;
 };
 
+/**
+ * @brief The receiver portion of frame header's sequence number management according
+ * to selective repeat sliding window protocol.
+ */
 class SelectiveRepeatReceiver {
  public:
   /**

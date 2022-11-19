@@ -2,6 +2,10 @@
 #include "SelectiveRepeatSender.h"
 #include "gtest/gtest.h"
 
+/**
+ * @brief Tests for SelectiveRepeatReceiver
+ * 
+ */
 class ReceiverTest : public testing::Test {
  protected:
   SelectiveRepeatReceiver* srp;
