@@ -80,11 +80,14 @@ bool SelectiveRepeatSender::acknowledge(ReceiverAck ack) {
       delete delSeq;
     }
   } else { return false; }
-  // Remove any properly-received sequence numbers to prevent re-transmission.
-  while (!windowSequences->empty() && windowSequences->front()->received) {
-    SequenceNumber* delSeq = windowSequences->front();
-    windowSequences->pop_front();
-    delete delSeq;
+  // Remove any sent and acknowledged sequence numbers to free up window space.
+  for (int i = 0; i < windowSequences->size(); i++) {
+    if (windowSequences->at(i)->received) {
+      SequenceNumber* delSeq = windowSequences->at(i);
+      windowSequences->erase(windowSequences->begin() + i);
+      delete delSeq;
+      i--;
+    }
   }
   // Set sequence numbers in the window to transmitted to show they've been
   // properly received by the receiver.
@@ -97,3 +100,9 @@ bool SelectiveRepeatSender::acknowledge(ReceiverAck ack) {
   }
   return true;
 }
+
+
+sender -> 1234567
+receiver <- 1234 67 -> ack(4, [6, 7]);
+sender <- ack(4, [6,7])
+sender -> 589 10 11
