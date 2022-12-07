@@ -6,19 +6,19 @@
 #include "SelectiveRepeatSender.h"
 #include "SelectiveRepeatReceiver.h"
 
-SelectiveRepeatSender::SelectiveRepeatSender(int b) {
+Sender::Sender(int b) {
   window = new SlidingWindow(b);
 };
 
-SelectiveRepeatSender::~SelectiveRepeatSender() {
+Sender::~Sender() {
   delete window;
 }
 
-int SelectiveRepeatSender::send() {
+int Sender::send() {
   return send(0);
 }
 
-int SelectiveRepeatSender::send(int i) {
+int Sender::send(int i) {
   auto seqs = window->getWindowSequences();
   if (seqs->size() < 1) { return -1; }
   SequenceNumber* seq = seqs->at(i);
@@ -32,7 +32,7 @@ int SelectiveRepeatSender::send(int i) {
   return seq->sequence;
 }
 
-std::vector<int> SelectiveRepeatSender::sendAll() {
+std::vector<int> Sender::sendAll() {
   std::vector<int> sent;
   std::deque<SequenceNumber*>* seqs = window->getWindowSequences();
   for (int i = 0; i < seqs->size(); i++) {
@@ -43,7 +43,7 @@ std::vector<int> SelectiveRepeatSender::sendAll() {
   return sent;
 }
 
-int SelectiveRepeatSender::getSentCount() {
+int Sender::getSentCount() {
   std::deque<SequenceNumber*>* seqs = window->getWindowSequences();
   int count = 0;
   for (int i = 0; i < seqs->size(); i++) {
@@ -54,13 +54,13 @@ int SelectiveRepeatSender::getSentCount() {
   return count;
 }
 
-bool SelectiveRepeatSender::prepareNext() {
+bool Sender::prepareNext() {
   if (window->advance() != -1) {
     return true;
   } else { return false; }
 }
 
-bool SelectiveRepeatSender::acknowledge(ReceiverAck ack) {
+bool Sender::acknowledge(ReceiverAck ack) {
   // remove 1 or more sequences from the sliding window when acknowledged
   // if s is 4 and front of deque is 2, it'll remove 2, 3, and 4. Assumes the
   // deque is in order (should be).

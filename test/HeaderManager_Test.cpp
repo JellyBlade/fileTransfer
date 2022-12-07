@@ -1,7 +1,7 @@
 // headerManager GTests
 // Tyler Hippard <tyler.hippard@uleth.ca>
 
-#include "headerManager.h"
+#include "HeaderManager.h"
 #include "gtest/gtest.h"
 
 class HeaderManagerTest : public testing::Test {

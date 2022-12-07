@@ -1,4 +1,4 @@
-#include "headerManager.h"
+#include "HeaderManager.h"
 #include <vector>
 #include <cstdint>
 
@@ -27,6 +27,10 @@ void HeaderManager::setType(int type) {
 int HeaderManager::getTR() {
   // zero out type and shift over 5 to get TR value
   return (header[TYPE_START] & 0x3f) >> 5;
+}
+
+bool Header::Manager::getTrunc() {
+  return getTR();
 }
 
 void HeaderManager::setTR(int tr) {
@@ -75,7 +79,7 @@ void HeaderManager::setLength(int length) {
   // zero out length
   header[LENGTH_START] &= 0x00;
   header[LENGTH_END] &= 0x00;
-  if (length > 65535 || length < 0) {
+  if (length > 512 || length < 0) {
     return;
   }
   header[LENGTH_START] |= (length >> 8);

@@ -28,7 +28,16 @@ class HeaderManager {
   // Returns the entire header vector.
   std::vector<uint8_t> getHeader();
 
-  // Returns the value of the header's type.
+  /**
+   * @brief Get this header's type.
+   * 1 = PTYPE_DATA
+   * 2 = PTYPE_ACK
+   * 3 = PTYPE_NACK
+   * 0 or any other number than the above means that this packet will be
+   * ignored.
+   * 
+   * @return int 
+   */
   int getType();
 
   // Sets the header's type field to the specified type.
@@ -37,6 +46,14 @@ class HeaderManager {
 
   // Returns the value of the header's TR.
   int getTR();
+
+  /**
+   * @brief Has this packet been truncated?
+   * 
+   * @return true if the packet has been truncated (TR = 1)
+   * @return false otherwise;
+   */
+  bool isTrunc()
 
   // Sets the header's TR field to the specified value.
   // If the provided TR value is not 0 or 1, the value is set to 0.
@@ -60,7 +77,7 @@ class HeaderManager {
   int getLength();
 
   // Sets the header's length field to the specified value.
-  // If the provided length value is not between 0..65535, the value is set to 0.
+  // If the provided length value is not between 0..512, the value is set to 0.
   void setLength(int length);
 };
 

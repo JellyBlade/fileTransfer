@@ -7,15 +7,15 @@
 #include "SequenceNumber.h"
 #include "SelectiveRepeatReceiver.h"
 
-SelectiveRepeatReceiver::SelectiveRepeatReceiver(int b) {
+Receiver::Receiver(int b) {
   window = new SlidingWindow(b);
 }
 
-SelectiveRepeatReceiver::~SelectiveRepeatReceiver() {
+Receiver::~Receiver() {
   delete window;
 }
 
-void SelectiveRepeatReceiver::receive(int s) {
+void Receiver::receive(int s) {
   if (s <= window->getCurrentSequence()) { return; }
   if (s == window->getCurrentSequence() + 1 && window->canAdvance()) {
     int ws = window->advance();
@@ -34,7 +34,7 @@ void SelectiveRepeatReceiver::receive(int s) {
   }
 }
 
-int SelectiveRepeatReceiver::getDeliverableSeq() {
+int Receiver::getDeliverableSeq() {
   std::deque<SequenceNumber*>* seqs = window->getWindowSequences();
   for (int i = 0; i < seqs->size(); i++) {
     if (!seqs->at(i)->received) {
@@ -44,7 +44,7 @@ int SelectiveRepeatReceiver::getDeliverableSeq() {
   return -1;
 }
 
-int SelectiveRepeatReceiver::deliver() {
+int Receiver::deliver() {
   std::deque<SequenceNumber*>* seqs = window->getWindowSequences();
   for (int i = 0; i < seqs->size(); i++) {
     SequenceNumber* seq = seqs->at(i);
@@ -63,7 +63,7 @@ int SelectiveRepeatReceiver::deliver() {
   return -1;
 }
 
-int SelectiveRepeatReceiver::getAcknowledgable() {
+int Receiver::getAcknowledgable() {
   std::deque<SequenceNumber*>* seqs = window->getWindowSequences();
   for (int i = 0; i < seqs->size(); i++) {
     SequenceNumber* seq = seqs->at(i);
@@ -77,7 +77,7 @@ int SelectiveRepeatReceiver::getAcknowledgable() {
 }
 
 
-ReceiverAck SelectiveRepeatReceiver::acknowledge() {
+ReceiverAck Receiver::acknowledge() {
   std::deque<SequenceNumber*>* seqs = window->getWindowSequences();
   for (int i = 0; i < seqs->size(); i++) {
     SequenceNumber* seq = seqs->at(i);
