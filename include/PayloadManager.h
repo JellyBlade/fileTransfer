@@ -24,6 +24,12 @@ class PayloadManager {
   PayloadManager(int s);
 
   /**
+   * @brief Construct a new Payload Manager with the given payload.
+   * 
+   */
+  PayloadManager(std::vector<uint8_t> p);
+
+  /**
    * @brief Adds the given uint8_t to the payload
    * 
    * @param p data to add to the payload

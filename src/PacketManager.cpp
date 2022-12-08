@@ -71,6 +71,33 @@ void PacketManager::setPacket(std::vector<uint8_t> p) {
   packet = p;
 }
 
+void PacketManager::rebuildPacket() {
+  std::vector<uint8_t> headerData;
+  std::vector<uint8_t> timestampData;
+  std::vector<uint8_t> crc1Data;
+  std::vector<uint8_t> crc2Data; 
+  std::vector<uint8_t> payloadData;
+
+  headerData.insert(headerData.begin(), packet.begin(), packet.begin()+3);
+  timestampData.insert(timestampData.begin(), packet.begin()+4, packet.begin()+7);
+  crc1Data.insert(crc1Data.begin(), packet.begin()+8, packet.begin()+11);
+  crc2Data.insert(crc2Data.begin(), packet.end()-3, packet.end());
+  payloadData.insert(payloadData.begin(), packet.begin()+12, packet.end()-4);
+
+  HeaderManager h(headerData);
+  TimestampManager t(timestampData);
+  CRCManager c1;
+  CRCManager c2;
+  PayloadManager p(payloadData);
+  c1.setCRCBytes(crc1Data);
+  c2.setCRCBytes(crc2Data);
+  header = h;
+  timestamp = t;
+  crc1 = c1;
+  crc2 = c2;
+  payload = p;
+}
+
 int PacketManager::getPacketType() {
   return header.getType();
 }

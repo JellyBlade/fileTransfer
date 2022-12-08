@@ -8,6 +8,10 @@ TimestampManager::TimestampManager() {
   set();
 }
 
+TimestampManager::TimestampManager(std::vector<uint8_t> t) {
+  timestamp = t;
+}
+
 void TimestampManager::set(int unix) {
   timestamp.push_back(static_cast<uint8_t>((unix >> 24)));
   timestamp.push_back(static_cast<uint8_t>((unix >> 16) & 0xff));

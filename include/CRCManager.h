@@ -56,6 +56,12 @@ class CRCManager {
    */
   unsigned long getCRC() const;
 
+  /**
+   * @brief Sets the CRC32 checksum to the provided 
+   * 
+   */
+  void setCRCBytes(std::vector<uint8_t> c);
+
    /**
    * @brief Returns the CRC32 checksum as a vector of uint8_t's
    * 

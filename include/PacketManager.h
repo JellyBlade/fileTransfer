@@ -102,6 +102,8 @@ class PacketManager {
    */
   void setPacket(std::vector<uint8_t>);
 
+  void rebuildPacket();
+
   /**
    * @brief Gets the type of this packet. 
    * 1 = PTYPE_DATA

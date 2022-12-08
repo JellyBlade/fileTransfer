@@ -15,6 +15,13 @@ class TimestampManager {
   TimestampManager();
 
   /**
+   * @brief Construct a new Timestamp Manager with the given timestamp vector.
+   * 
+   * @param t 
+   */
+  TimestampManager(std::vector<uint8_t> t);
+
+  /**
    * @brief Sets the timestamp to the given UNIX time integer.
    * 
    * @param unix UNIX time integer to store

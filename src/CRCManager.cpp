@@ -30,6 +30,10 @@ unsigned long CRCManager::getCRC() const {
   return crc;
 }
 
+void CRCManager::setCRCBytes(std::vector<uint8_t> c) {
+  crc = (c[0] << 24) | ((c[1] << 16) & 0xff) | (c[2] << 8) | (c[3] & 0xff);
+}
+
 std::vector<uint8_t> CRCManager::getCRCBytes() {
   std::vector<uint8_t> crcBytes;
   crcBytes.push_back(static_cast<uint8_t>((crc >> 24)));

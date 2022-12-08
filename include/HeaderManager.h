@@ -26,6 +26,14 @@ class HeaderManager {
   HeaderManager();
 
   /**
+   * @brief Construct a new Header Manager, setting the header to the given
+   * header vector.
+   * 
+   * @param h 
+   */
+  HeaderManager(std::vector<uint8_t> h);
+
+  /**
    * @brief Overload the assignment operator for the HeaderManager class.
    *
    * @param h The HeaderManager object to copy from.
