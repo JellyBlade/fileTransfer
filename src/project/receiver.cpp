@@ -4,6 +4,10 @@
 #include <unistd.h>
 #include <netdb.h>
 #include <cstring>
+#include <cstdint>
+#include <vector>
+
+#include "PacketManager.h"
 
 // provide hostname and port value as command line arguments
 // Mess up with these values and the socket call will likely fail
@@ -13,7 +17,7 @@ int main(int argc, char *argv[]) {
   struct addrinfo hints, *results, *ptr;
   socklen_t fromlen;
   struct sockaddr_storage fromaddr;
-  char buf[512];
+  std::vector<uint8_t> packet(512);
 
   // quick check if we preovide the right arguments
   if (argc != 2) {
@@ -54,9 +58,19 @@ int main(int argc, char *argv[]) {
   // initialize fromlen to prevent EINVAL from being thrown by sendto()
   fromlen = sizeof(fromaddr);
 
-  byte_count = recvfrom(sock, buf, sizeof(buf) - 1, 0, (sockaddr*)(&fromaddr), &fromlen);
-  buf[byte_count] = 0;
-  std::cout << "Received: " <<  buf << std::endl;
-
+  byte_count = recvfrom(sock, packet.data(), packet.size(), 0, (sockaddr*)(&fromaddr), &fromlen);
+  if (byte_count == -1) {
+    std::cout << "Error occurred" << std::endl;
+    std::cout << std::strerror(errno) << std::endl;
+  }
+  std::cout << "Received " << byte_count << " bytes" << std::endl;
+  packet.resize(byte_count);
+  
+  PacketManager pm;
+  pm.setPacket(packet);
+  for (auto c : packet) {
+    std::cout << c;
+  }
+  std::cout << std::endl;
   close(sock);
 }

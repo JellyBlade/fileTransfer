@@ -68,6 +68,7 @@ int main(int argc, char *argv[]) {
   h.setLength(p.get().size());
   h.setSeqNum(1);
   h.setTR(0);
+
   h.setWindow(1);
   crc1.generate(h.getHeader());
   crc2.generate(p.get());
@@ -80,10 +81,11 @@ int main(int argc, char *argv[]) {
   
   pm.createPacket();
 
-int sent = sendto(sock, pm.getPacket(), sizeof(pm.getPacket()) - 1, 0, ptr->ai_addr, ptr->ai_addrlen);
+int sent = sendto(sock, pm.getPacket().data(), pm.getPacket().size(), 0, ptr->ai_addr, ptr->ai_addrlen);
   if (sent == -1) {
     std::cout << std::strerror(errno) << std::endl;
   }
+  std::cout << sent << std::endl;
 
   close(sock);
 }
