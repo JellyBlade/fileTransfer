@@ -19,7 +19,7 @@ class PacketManager {
   /**
    * @brief Construct a new Packet Manager object
    * 
-   */0
+   */
   PacketManager() {};
 
   /**
@@ -100,7 +100,7 @@ class PacketManager {
    * by the receiver.
    * 
    */
-  void setPacket(std::vector<uint8_t>)
+  void setPacket(std::vector<uint8_t>);
 
   /**
    * @brief Gets the type of this packet. 
