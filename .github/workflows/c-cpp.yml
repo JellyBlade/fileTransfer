@@ -17,9 +17,21 @@ jobs:
       run: sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make && sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a && sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
     - name: install valgrind
       run: sudo apt-get install valgrind
+    - name: install lcov
+      run: sudo apt-get install lcov
+    - name: install doxygen
+      run: sudo apt-get install doxygen doxygen-gui graphviz
     - name: build tests
       run: make allTests
-    - name: run tests
-      run: ./test_fileTransfer
+    - name: upload coverage
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage
+        path: coverage
+    - name: upload doxygen
+      uses: actions/upload-artifact@v2
+      with:
+        name: doxygen
+        path: docs
     - name: clean up
       run: make clean
