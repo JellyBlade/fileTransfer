@@ -7,7 +7,7 @@
 #include "PayloadManager.h"
 
 CRCManager::CRCManager() {
-  crc = crc32(0L, NULL, O);
+  crc = crc32(0L, NULL, 0);
 }
 
 CRCManager::CRCManager(HeaderManager h) {
@@ -31,7 +31,7 @@ unsigned long CRCManager::getCRC() const {
 }
 
 std::vector<uint8_t> CRCManager::getCRCBytes() {
-  std::vector<uint18_t> crcBytes;
+  std::vector<uint8_t> crcBytes;
   crcBytes.push_back(static_cast<uint8_t>((crc >> 24)));
   crcBytes.push_back(static_cast<uint8_t>((crc >> 16) & 0xff));
   crcBytes.push_back(static_cast<uint8_t>((crc >> 8)));

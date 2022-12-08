@@ -61,7 +61,7 @@ class CRCManager {
    * 
    * @return unsigned long CRC32 checksum as 4 bytes.
    */
-  std:vector<uint8_t> getCRCBytes();
+  std::vector<uint8_t> getCRCBytes();
 
   /**
    * @brief Compare the CRC in the given CRCManager to this one.
