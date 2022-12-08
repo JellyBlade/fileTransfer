@@ -34,7 +34,7 @@ class HeaderManager {
   HeaderManager& operator=(const HeaderManager &h);
 
   // Returns the entire header vector.
-  std::vector<uint8_t> getHeader();
+  std::vector<uint8_t> getHeader() const;
 
   /**
    * @brief Get this header's type.

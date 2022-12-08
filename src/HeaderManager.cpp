@@ -11,7 +11,7 @@ HeaderManager& HeaderManager::operator=(const HeaderManager &other) {
   return *this;
 }
 
-std::vector<uint8_t> HeaderManager::getHeader() {
+std::vector<uint8_t> HeaderManager::getHeader() const {
   return header;
 }
 
