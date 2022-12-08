@@ -29,7 +29,7 @@ int HeaderManager::getTR() {
   return (header[TYPE_START] & 0x3f) >> 5;
 }
 
-bool HeaderManager::getTrunc() {
+bool HeaderManager::isTrunc() {
   return getTR();
 }
 
