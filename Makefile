@@ -4,7 +4,7 @@ GTEST = test_$(PROJECT)
 # Compilation command and flags
 CXX=g++
 CXXVERSION= -std=c++11
-CXXFLAGS= $(CXXVERSION) -g -fprofile-arcs -ftest-coverage
+CXXFLAGS= $(CXXVERSION) -g -lz -fprofile-arcs -ftest-coverage
 LINKFLAGS= -lgtest -lgtest_main -lpthread
 
 # Directories
