@@ -7,6 +7,11 @@
  * delivering the sequence numbers.
  */
 struct SequenceNumber {
+  SequenceNumber(int seq, bool rec, bool snt) {
+    sequence = seq;
+    received = rec;
+    sent = snt;
+  }
   int sequence = 0;
   bool received = false;
   bool sent = false;
