@@ -23,6 +23,7 @@ CRCManager::CRCManager(PayloadManager p) {
 }
 
 void CRCManager::generate(std::vector<uint8_t> b) {
+  crc = crc32(0L, NULL, 0);
   crc = crc32(crc, reinterpret_cast<const Bytef*>(b.data()), b.size());
 }
 
