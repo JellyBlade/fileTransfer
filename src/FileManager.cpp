@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <fstream>
 
 #include "PayloadManager.h"
 #include "FileManager.h"
