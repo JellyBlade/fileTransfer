@@ -5,7 +5,7 @@
 
 #include "SlidingWindow.h"
 #include "SequenceNumber.h"
-#include "SelectiveRepeatReceiver.h"
+#include "Receiver.h"
 
 Receiver::Receiver(int b) {
   window = new SlidingWindow(b);

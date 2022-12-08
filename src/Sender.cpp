@@ -3,8 +3,8 @@
 #include <algorithm>
 
 #include "SequenceNumber.h"
-#include "SelectiveRepeatSender.h"
-#include "SelectiveRepeatReceiver.h"
+#include "Sender.h"
+#include "Receiver.h"
 
 Sender::Sender(int b) {
   window = new SlidingWindow(b);

@@ -53,7 +53,7 @@ class HeaderManager {
    * @return true if the packet has been truncated (TR = 1)
    * @return false otherwise;
    */
-  bool isTrunc()
+  bool isTrunc();
 
   // Sets the header's TR field to the specified value.
   // If the provided TR value is not 0 or 1, the value is set to 0.

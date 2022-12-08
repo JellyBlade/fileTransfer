@@ -7,7 +7,7 @@
 #include "PayloadManager.h"
 
 CRCManager::CRCManager() {
-  crc = crc32(0L, NULL, O);
+  crc = crc32(0L, NULL, 0);
 }
 
 CRCManager::CRCManager(HeaderManager h) {
@@ -31,7 +31,7 @@ unsigned long CRCManager::getCRC() {
 }
 
 bool CRCManager::compare(CRCManager&c ) {
-  return c.getCRC == crc;
+  return c.getCRC() == crc;
 }
 
 bool CRCManager::compare(unsigned long c) {
@@ -39,5 +39,5 @@ bool CRCManager::compare(unsigned long c) {
 }
 
 bool CRCManager::operator==(const CRCManager& c) {
-  return c.getCRC == crc;
+  return c.getCRC() == crc;
 }
