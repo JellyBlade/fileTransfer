@@ -18,7 +18,7 @@
 int main(int argc, char *argv[]) {
   int sock, rval, byte_count;
   struct addrinfo hints, *results, *ptr;
-  char buf[512];
+
   PacketManager pm;
   HeaderManager h;
   CRCManager crc1;
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
   PayloadManager p = PayloadManager(512);
   TimestampManager t;
 
-  // quick check if we preovide the right arguments
+  // quick check if we provide the right arguments
   if (argc != 3) {
     std::cout << "Usage " << argv[0] << " destination_host destination_port" << std::endl;
     return 1; // terminate

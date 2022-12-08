@@ -19,12 +19,14 @@ int main(int argc, char *argv[]) {
   socklen_t fromlen;
   struct sockaddr_storage fromaddr;
   std::vector<uint8_t> packet(512);
+  bool fileFlag = false;
 
-  // quick check if we preovide the right arguments
+  // quick check if we provide the right arguments
   if (argc != 2) {
     std::cout << "Usage " << argv[0] << " receive_port" << std::endl;
     return 1; // terminate
   }
+
   
   // if we obtain the data from getaddrinfo, we might as well use it to open the socket
 
@@ -93,12 +95,6 @@ int main(int argc, char *argv[]) {
     std::cout << cp.getCRC() << std::endl;
     std::cout << cp2.getCRC() << std::endl;
   }
-  std::cout << std::hex;
-  std::cout << pm.getCRC(1).getCRC() << std::endl;
-  std::cout << ch.getCRC() << std::endl;
-  std::cout << pm.getCRC(2).getCRC() << std::endl;
-  std::cout << cp.getCRC() << std::endl;
-
 
   for (auto c : pm.getPayload().get()) {
     std::cout << c;
