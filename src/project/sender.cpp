@@ -5,6 +5,13 @@
 #include <netdb.h>
 #include <cstring>
 
+#include "HeaderManager.h"
+#include "CRCManager.h"
+#include "FileManager.h"
+#include "TimestampManager.h"
+#include "PayloadManager.h"
+#include "PacketManager.h"
+
 // provide hostname and port value as command line arguments
 // Mess up with these values and the socket call will likely fail
 // argv[0] is the executable name
@@ -12,6 +19,12 @@ int main(int argc, char *argv[]) {
   int sock, rval, byte_count;
   struct addrinfo hints, *results, *ptr;
   char buf[512];
+  PacketManager pm;
+  HeaderManager h;
+  CRCManager crc1;
+  CRCManager crc2;
+  PayloadManager p = PayloadManager(512);
+  TimestampManager t;
 
   // quick check if we preovide the right arguments
   if (argc != 3) {
@@ -47,10 +60,27 @@ int main(int argc, char *argv[]) {
 
   // if not, we are ready to send here
   // add the code to send "hello world" here
-  std::cout << "Enter a message: ";
-  std::cin.getline(buf, 512);
+  for (char c : "Hello goobers") {
+    p.add(static_cast<std::uint8_t>(c));
+  }
 
-int sent = sendto(sock, buf, sizeof(buf) - 1, 0, ptr->ai_addr, ptr->ai_addrlen);
+  h.setType(1);
+  h.setLength(p.get().size());
+  h.setSeqNum(1);
+  h.setTR(0);
+  h.setWindow(1);
+  crc1.generate(h.getHeader());
+  crc2.generate(p.get());
+  
+  pm.setCRC(crc1);
+  pm.setCRC(crc2, 2);
+  pm.setHeader(h);
+  pm.setPayload(p);
+  pm.setTimestamp(t);
+  
+  pm.createPacket();
+
+int sent = sendto(sock, pm.getPacket(), sizeof(pm.getPacket()) - 1, 0, ptr->ai_addr, ptr->ai_addrlen);
   if (sent == -1) {
     std::cout << std::strerror(errno) << std::endl;
   }
