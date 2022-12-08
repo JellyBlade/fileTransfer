@@ -1,7 +1,6 @@
 #ifndef CRCMANAGER_H
 #define CRCMANAGER_H
 
-#include <zlib.h>
 #include <vector>
 #include <cstdint>
 
@@ -43,6 +42,12 @@ class CRCManager {
    * @param p 
    */
   CRCManager(PayloadManager p);
+
+  /**
+   * @brief Generates a CRC32 checksum for the given vector of uint8_t's.
+   * 
+   */
+  void generate(std::vector<uint8_t> h);
 
   /**
    * @brief Returns the CRC32 checksum

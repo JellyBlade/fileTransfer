@@ -39,6 +39,12 @@ class PayloadManager {
    */
   std::vector<uint8_t> get();
 
+  /**
+   * @brief Removes all of the data in the PayloadManager. For network use.
+   * 
+   */
+  void truncate();
+
  private:
   std::vector<uint8_t> payload;
   int size = 0;
