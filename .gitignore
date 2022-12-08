@@ -1,5 +1,8 @@
 .vscode
 *.swp
-testSH
+*.gcno
+*.gcda
+test_fileTransfer
+fileTransfer_*
 html
 latex
