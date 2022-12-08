@@ -2,13 +2,12 @@
 #include <vector>
 #include <cstdint>
 
+#include <iostream>
+#include <cstring>
+
 #include "CRCManager.h"
 #include "HeaderManager.h"
 #include "PayloadManager.h"
-
-CRCManager::CRCManager() {
-  crc = crc32(0L, NULL, 0);
-}
 
 CRCManager::CRCManager(HeaderManager h) {
   generate(h.getHeader());
@@ -32,7 +31,8 @@ unsigned long CRCManager::getCRC() const {
 }
 
 void CRCManager::setCRCBytes(std::vector<uint8_t> c) {
-  crc = (c[0] << 24) | ((c[1] << 16) & 0xff) | (c[2] << 8) | (c[3] & 0xff);
+  // have to mask the first 4 bytes as they get set to 0xFF for some reason
+  crc = (c[0] << 24) | (c[1] << 16) | (c[2] << 8) | (c[3]) & 0x00000000FFFFFFFF;
 }
 
 std::vector<uint8_t> CRCManager::getCRCBytes() {

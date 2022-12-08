@@ -78,10 +78,10 @@ void PacketManager::rebuildPacket() {
   std::vector<uint8_t> crc2Data; 
   std::vector<uint8_t> payloadData;
 
-  headerData.insert(headerData.begin(), packet.begin(), packet.begin()+3);
-  timestampData.insert(timestampData.begin(), packet.begin()+4, packet.begin()+7);
-  crc1Data.insert(crc1Data.begin(), packet.begin()+8, packet.begin()+11);
-  crc2Data.insert(crc2Data.begin(), packet.end()-3, packet.end());
+  headerData.insert(headerData.begin(), packet.begin(), packet.begin()+4);
+  timestampData.insert(timestampData.begin(), packet.begin()+4, packet.begin()+8);
+  crc1Data.insert(crc1Data.begin(), packet.begin()+8, packet.begin()+12);
+  crc2Data.insert(crc2Data.end(), std::prev(packet.end(), 4), packet.end());
   payloadData.insert(payloadData.begin(), packet.begin()+12, packet.end()-4);
 
   HeaderManager h(headerData);

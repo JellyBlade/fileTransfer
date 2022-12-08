@@ -17,7 +17,7 @@ class CRCManager {
    * @brief Construct a new CRCManager, generating an initial checksum.
    * 
    */
-  CRCManager();
+  CRCManager() {};
 
   /**
    * @brief Construct a new CRCManager, generating a checksum for the header

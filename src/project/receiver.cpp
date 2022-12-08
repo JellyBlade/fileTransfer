@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "PacketManager.h"
+#include "CRCManager.h"
 
 // provide hostname and port value as command line arguments
 // Mess up with these values and the socket call will likely fail
@@ -68,7 +69,38 @@ int main(int argc, char *argv[]) {
   
   PacketManager pm;
   pm.setPacket(packet);
-  for (auto c : packet) {
+  pm.rebuildPacket();
+  
+  if (pm.isTrunc()) {
+    std::cout << "NOTACK" << std::endl;
+  }
+  if (pm.getHeader().getType() > 3 || pm.getHeader().getType() < 1) {
+    std::cout << "Packet ignored" << std::endl;
+  }
+  CRCManager ch(pm.getHeader());
+  CRCManager ch2(pm.getHeader());
+  if (!(pm.getCRC(1) == ch)) {
+    std::cout << "Header Checksum failed!" << std::endl;
+    std::cout << pm.getCRC(1).getCRC() << std::endl;
+    std::cout << ch.getCRC() << std::endl;
+    std::cout << ch2.getCRC() << std::endl;
+  }
+  CRCManager cp(pm.getPayload());
+  CRCManager cp2(pm.getPayload());
+  if (!(pm.getCRC(2) == cp)) {
+    std::cout << "Payload checksum failed!" << std::endl;
+    std::cout << pm.getCRC(2).getCRC() << std::endl;
+    std::cout << cp.getCRC() << std::endl;
+    std::cout << cp2.getCRC() << std::endl;
+  }
+  std::cout << std::hex;
+  std::cout << pm.getCRC(1).getCRC() << std::endl;
+  std::cout << ch.getCRC() << std::endl;
+  std::cout << pm.getCRC(2).getCRC() << std::endl;
+  std::cout << cp.getCRC() << std::endl;
+
+
+  for (auto c : pm.getPayload().get()) {
     std::cout << c;
   }
   std::cout << std::endl;
