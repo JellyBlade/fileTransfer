@@ -1,11 +1,11 @@
 PROJECT = fileTransfer
-GTEST = test_$(PROJECT)
+GTEST = ./test_$(PROJECT)
 
 # Compilation command and flags
 CXX=g++
 CXXVERSION= -std=c++11
-CXXFLAGS= $(CXXVERSION) -g -lz -fprofile-arcs -ftest-coverage
-LINKFLAGS= -lgtest -lgtest_main -lpthread
+CXXFLAGS= $(CXXVERSION) -g -fprofile-arcs -ftest-coverage
+LINKFLAGS= -lgtest -lgtest_main -lpthread -lz
 
 # Directories
 SRC_DIR = src
@@ -40,7 +40,7 @@ clean:
 	*.gcov *.gcda *.gcno \
 	$(PROJECT) $(COVERAGE_RESULTS) \
 	$(GTEST) $(MEMCHECK_RESULTS) $(COVERAGE_DIR)  \
-	$(PROJECT).exe $(GTEST).exe
+	$(PROJECT)_* $(GTEST)
 
 # compilation using the files in include, src, and test, but not src/project
 $(GTEST): $(GTEST_DIR) $(SRC_DIR)
@@ -51,11 +51,11 @@ $(GTEST): $(GTEST_DIR) $(SRC_DIR)
 all: sender receiver
 sender: $(SRC_DIR) $(PROJECT_SRC_DIR)
 	$(CXX) $(CXXVERSION) -o $(PROJECT)_sender $(INCLUDE) \
-	$(SRC_DIR)/*.cpp $(PROJECT_SRC_DIR)/sender.cpp
+	$(SRC_DIR)/*.cpp $(PROJECT_SRC_DIR)/sender.cpp -lz
 
 receiver: $(SRC_DIR) $(PROJECT_SRC_DIR)
 	$(CXX) $(CXXVERSION) -o $(PROJECT)_receiver $(INCLUDE) \
-	$(SRC_DIR)/*.cpp $(PROJECT_SRC_DIR)/receiver.cpp
+	$(SRC_DIR)/*.cpp $(PROJECT_SRC_DIR)/receiver.cpp -lz
 
 # To perform all tests
 .PHONY: allTests
