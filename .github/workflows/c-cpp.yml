@@ -15,9 +15,9 @@ jobs:
     - uses: actions/checkout@v3
     - name: install gtest
       run: sudo apt-get install libgtest-dev && cd /usr/src/gtest && sudo cmake CMakeLists.txt && sudo make && sudo ln -s /usr/lib/libgtest.a /usr/local/lib/libgtest.a && sudo ln -s /usr/lib/libgtest_main.a /usr/local/lib/libgtest_main.a
-    - name: make tests
-      run: make tests
-    - name: run test
+    - name: build tests
+      run: make test
+    - name: run tests
       run: ./test_fileTransfer
-    - name: make clean
+    - name: clean up
       run: make clean
