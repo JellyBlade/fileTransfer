@@ -55,7 +55,7 @@ sender: $(SRC_DIR) $(PROJECT_SRC_DIR)
 
 receiver: $(SRC_DIR) $(PROJECT_SRC_DIR)
 	$(CXX) $(CXXVERSION) -o $(PROJECT)_receiver $(INCLUDE) \
-	$(SRC_DIR)/*.cpp $(PROJECT_SRC_DIR)/receiver.cpp -lz
+	$(SRC_DIR)/*.cpp $(PROJECT_SRC_DIR)/receiver.cpp -lz -g
 
 # To perform all tests
 .PHONY: allTests
