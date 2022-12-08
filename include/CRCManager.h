@@ -54,7 +54,14 @@ class CRCManager {
    * 
    * @return unsigned long CRC32 checksum
    */
-  unsigned long getCRC();
+  unsigned long getCRC() const;
+
+   /**
+   * @brief Returns the CRC32 checksum as a vector of uint8_t's
+   * 
+   * @return unsigned long CRC32 checksum as 4 bytes.
+   */
+  std:vector<uint8_t> getCRCBytes();
 
   /**
    * @brief Compare the CRC in the given CRCManager to this one.
@@ -81,7 +88,7 @@ class CRCManager {
    * @return true if the checksums are equal
    * @return false otherwise
    */
-  bool operator==(const CRCManager& c);
+  bool operator==(const CRCManager& c) const;
  private:
   unsigned long crc;
 };
