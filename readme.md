@@ -3,8 +3,10 @@ Tyler Hippard, Landon Constantin
 To compile:
 > make
 
-Run sender and receiver:
+Run sender:
 > ./fileTransfer_sender destination_host destination_port
+
+Run receiver:
 > ./fileTransfer_receiver receive_port
 
 Send from a file:
