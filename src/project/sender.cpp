@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
   CRCManager crc2;
   TimestampManager t;
   FileManager f;
-  PayloadManager p;
+  PayloadManager p = PayloadManager(512);
   bool fileFlag = false;
   std::string fileName = "";
 
@@ -35,21 +35,21 @@ int main(int argc, char *argv[]) {
         fileName = optarg;
         break;
       case ':':
-        std::cout << "Usage: " << argv[0] << "[-f filename] destination_host destination_port" << std::endl;
+        std::cout << "Usage: " << argv[0] << " [-f filename] destination_host destination_port" << std::endl;
         return 1;
       case '?':
         // Handle unknown option.
-        std::cout << "Usage: " << argv[0] << "[-f filename] destination_host destination_port" << std::endl;
+        std::cout << "Usage: " << argv[0] << " [-f filename] destination_host destination_port" << std::endl;
         return 1;
     }
   }
 
   // Access the required arguments using optind.
   if (!(optind < argc)) {
-    std::cout << "Usage: " << argv[0] << "[-f filename] destination_host destination_port" << std::endl;
+    std::cout << "Usage: " << argv[0] << " [-f filename] destination_host destination_port" << std::endl;
     return 1;
   } else if (!(optind + 1 < argc)) {
-    std::cout << "Usage: " << argv[0] << "[-f filename] destination_host destination_port" << std::endl;
+    std::cout << "Usage: " << argv[0] << " [-f filename] destination_host destination_port" << std::endl;
     return 1;
   }
   
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
   hints.ai_family = AF_UNSPEC;  // we ask for both IPv4 and IPv6
   hints.ai_socktype = SOCK_DGRAM;
   
-  if ((rval = getaddrinfo(argv[1], argv[2], &hints, &results)) != 0) { // error
+  if ((rval = getaddrinfo(argv[optind], argv[optind+1], &hints, &results)) != 0) { // error
     std::cerr << "Error getting the destination address: " << gai_strerror(rval) << std::endl;
     return 2;
   }
@@ -85,7 +85,6 @@ int main(int argc, char *argv[]) {
   h.setSeqNum(0);
   h.setTR(0);
   h.setWindow(1);
-
   if (fileFlag) {
     f.read(fileName);
     pm.setPayload(f.getContents()[pm.getSeq()]);
@@ -93,8 +92,8 @@ int main(int argc, char *argv[]) {
     std::cout << "Enter a message: ";
     std::string input;
     std::getline(std::cin, input);
-    for (auto c : input) {
-      p.add(c);
+    for (char c : input) {
+      p.add(static_cast<uint8_t>(c));
     }
     pm.setPayload(p);
   }
@@ -105,7 +104,6 @@ int main(int argc, char *argv[]) {
   pm.setCRC(crc1);
   pm.setCRC(crc2, 2);
   pm.setHeader(h);
-  pm.setPayload(p);
   pm.setTimestamp(t);
   pm.createPacket();
 
