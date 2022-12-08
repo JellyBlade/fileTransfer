@@ -7,24 +7,45 @@
 #include <cstdint>
 #include <vector>
 
+#include "FileManager.h"
 #include "PacketManager.h"
-#include "CRCManager.h"
 
 // provide hostname and port value as command line arguments
 // Mess up with these values and the socket call will likely fail
 // argv[0] is the executable name
 int main(int argc, char *argv[]) {
-  int sock, rval, byte_count;
-  struct addrinfo hints, *results, *ptr;
+  int sock, rval, byte_count, opt;
+  struct addrinfo hints,results, *ptr;
   socklen_t fromlen;
   struct sockaddr_storage fromaddr;
   std::vector<uint8_t> packet(512);
+  FileManager f;
   bool fileFlag = false;
+  std::string fileName = "";
 
-  // quick check if we provide the right arguments
-  if (argc != 2) {
-    std::cout << "Usage " << argv[0] << " receive_port" << std::endl;
-    return 1; // terminate
+ while ((opt = getopt(argc, argv, "f:")) != -1) {
+    switch (opt) {
+      case 'f':
+        fileFlag = true;
+        fileName = optarg;
+        break;
+      case ':':
+        std::cout << "Usage: " << argv[0] << "[-f filename] receive_port" << std::endl;
+        return 1;
+      case '?':
+        // Handle unknown option.
+        std::cout << "Usage: " << argv[0] << "[-f filename] receive_port" << std::endl;
+        return 1;
+    }
+  }
+
+  // Access the required arguments using optind.
+  if (!(optind < argc)) {
+    std::cout << "Usage: " << argv[0] << "[-f filename] receive_port" << std::endl;
+    return 1;
+  } else if (!(optind + 1 < argc)) {
+    std::cout << "Usage: " << argv[0] << "[-f filename] receive_port" << std::endl;
+    return 1;
   }
 
   
@@ -96,9 +117,17 @@ int main(int argc, char *argv[]) {
     std::cout << cp2.getCRC() << std::endl;
   }
 
-  for (auto c : pm.getPayload().get()) {
-    std::cout << c;
+  if (fileFlag) {
+    std::vector<PayloadManager> payloads;
+    payloads.push_back(pm.getPayload());
+    f.setContents(payloads);
+    f.write(fileName);
+  } else {
+    for (auto c : pm.getPayload().get()) {
+      std::cout << c;
+    }
+    std::cout << std::endl;
   }
-  std::cout << std::endl;
+  
   close(sock);
 }

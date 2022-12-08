@@ -6,30 +6,51 @@
 #include <cstring>
 
 #include "HeaderManager.h"
+#include "PayloadManager.h"
 #include "CRCManager.h"
 #include "FileManager.h"
 #include "TimestampManager.h"
-#include "PayloadManager.h"
 #include "PacketManager.h"
 
 // provide hostname and port value as command line arguments
 // Mess up with these values and the socket call will likely fail
 // argv[0] is the executable name
 int main(int argc, char *argv[]) {
-  int sock, rval, byte_count;
+  int sock, rval, byte_count, opt;
   struct addrinfo hints, *results, *ptr;
-
   PacketManager pm;
   HeaderManager h;
   CRCManager crc1;
   CRCManager crc2;
-  PayloadManager p = PayloadManager(512);
   TimestampManager t;
+  FileManager f;
+  PayloadManager p;
+  bool fileFlag = false;
+  std::string fileName = "";
 
-  // quick check if we provide the right arguments
-  if (argc != 3) {
-    std::cout << "Usage " << argv[0] << " destination_host destination_port" << std::endl;
-    return 1; // terminate
+  while ((opt = getopt(argc, argv, "f:")) != -1) {
+    switch (opt) {
+      case 'f':
+        fileFlag = true;
+        fileName = optarg;
+        break;
+      case ':':
+        std::cout << "Usage: " << argv[0] << "[-f filename] destination_host destination_port" << std::endl;
+        return 1;
+      case '?':
+        // Handle unknown option.
+        std::cout << "Usage: " << argv[0] << "[-f filename] destination_host destination_port" << std::endl;
+        return 1;
+    }
+  }
+
+  // Access the required arguments using optind.
+  if (!(optind < argc)) {
+    std::cout << "Usage: " << argv[0] << "[-f filename] destination_host destination_port" << std::endl;
+    return 1;
+  } else if (!(optind + 1 < argc)) {
+    std::cout << "Usage: " << argv[0] << "[-f filename] destination_host destination_port" << std::endl;
+    return 1;
   }
   
   // if we obtain the data from getaddrinfo, we might as well use it to open the socket
@@ -58,27 +79,34 @@ int main(int argc, char *argv[]) {
     return 3;
   }
 
-  // if not, we are ready to send here
-  // add the code to send "hello world" here
-  for (char c : "Hello goobers") {
-    p.add(static_cast<std::uint8_t>(c));
-  }
-
+  // Create packet
   h.setType(1);
   h.setLength(p.get().size());
-  h.setSeqNum(1);
+  h.setSeqNum(0);
   h.setTR(0);
-
   h.setWindow(1);
+
+  if (fileFlag) {
+    f.read(fileName);
+    pm.setPayload(f.getContents()[pm.getSeq()]);
+  } else {
+    std::cout << "Enter a message: ";
+    std::string input;
+    std::getline(std::cin, input);
+    for (auto c : input) {
+      p.add(c);
+    }
+    pm.setPayload(p);
+  }
+
   crc1.generate(h.getHeader());
-  crc2.generate(p.get());
-  
+  crc2.generate(pm.getPayload().get());
+
   pm.setCRC(crc1);
   pm.setCRC(crc2, 2);
   pm.setHeader(h);
   pm.setPayload(p);
   pm.setTimestamp(t);
-  
   pm.createPacket();
 
 int sent = sendto(sock, pm.getPacket().data(), pm.getPacket().size(), 0, ptr->ai_addr, ptr->ai_addrlen);
