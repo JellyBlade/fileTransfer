@@ -25,6 +25,14 @@ class HeaderManager {
   // default constructor, initializes all header values to zero.
   HeaderManager();
 
+  /**
+   * @brief Overload the assignment operator for the HeaderManager class.
+   *
+   * @param h The HeaderManager object to copy from.
+   * @return HeaderManager& a reference to the HeaderManager to copy from
+   */
+  HeaderManager& operator=(const HeaderManager &h);
+
   // Returns the entire header vector.
   std::vector<uint8_t> getHeader();
 

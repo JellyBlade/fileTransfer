@@ -51,15 +51,15 @@ void PacketManager::createPacket() {
 
   std::vector<uint8_t> headerData = header.getHeader();
   std::vector<uint8_t> timestampData = timestamp.getBytes();
-  std::vector<uint8_t> crc1Data = crc1.getCRC();
-  std::vector<uint8_t> crc2Data = crc2.getCRC();
+  std::vector<uint8_t> crc1Data = crc1.getCRCBytes();
+  std::vector<uint8_t> crc2Data = crc2.getCRCBytes();
   std::vector<uint8_t> payloadData = payload.get();
 
-  packet.push_back(headerData.begin(), headerData.end());
-  packet.push_back(timestampData.begin(), timestampData.end());
-  packet.push_back(crc1Data.begin(), crc1Data.end());
-  packet.push_back(payloadData.begin(), payloadData.end());
-  packet.push_back(crc2Data.begin(), crc2Data.end());
+  packet.insert(packet.end(), headerData.begin(), headerData.end());
+  packet.insert(packet.end(), timestampData.begin(), timestampData.end());
+  packet.insert(packet.end(), crc1Data.begin(), crc1Data.end());
+  packet.insert(packet.end(), payloadData.begin(), payloadData.end());
+  packet.insert(packet.end(), crc2Data.begin(), crc2Data.end());
 }
 
 std::vector<uint8_t> PacketManager::getPacket() {

@@ -6,6 +6,11 @@ HeaderManager::HeaderManager() {
   std::fill(header.begin(), header.end(), 0);
 }
 
+HeaderManager& HeaderManager::operator=(const HeaderManager &other) {
+  header = other.getHeader();
+  return *this;
+}
+
 std::vector<uint8_t> HeaderManager::getHeader() {
   return header;
 }

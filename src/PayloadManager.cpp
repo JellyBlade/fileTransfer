@@ -7,7 +7,7 @@ PayloadManager::PayloadManager() {
   size = 0;
 }
 
-PayloadManager::PayloadManager(int s) : {
+PayloadManager::PayloadManager(int s) {
   size = s;
 }
 
