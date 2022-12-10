@@ -19,11 +19,7 @@ int main(int argc, char *argv[]) {
   int sock, rval, byte_count, opt;
   struct addrinfo hints, *results, *ptr;
   FileManager f;
-<<<<<<< HEAD
   std::vector<PacketManager> packets;
-=======
-  PayloadManager p = PayloadManager(512);
->>>>>>> 22987da58db2f13ce8f51bebb33b74d6f8afe33c
   bool fileFlag = false;
   std::string fileName = "";
 
