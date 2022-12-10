@@ -19,7 +19,11 @@ int main(int argc, char *argv[]) {
   int sock, rval, byte_count, opt;
   struct addrinfo hints, *results, *ptr;
   FileManager f;
+<<<<<<< HEAD
   std::vector<PacketManager> packets;
+=======
+  PayloadManager p = PayloadManager(512);
+>>>>>>> 22987da58db2f13ce8f51bebb33b74d6f8afe33c
   bool fileFlag = false;
   std::string fileName = "";
 
@@ -30,21 +34,21 @@ int main(int argc, char *argv[]) {
         fileName = optarg;
         break;
       case ':':
-        std::cout << "Usage: " << argv[0] << "[-f filename] destination_host destination_port" << std::endl;
+        std::cout << "Usage: " << argv[0] << " [-f filename] destination_host destination_port" << std::endl;
         return 1;
       case '?':
         // Handle unknown option.
-        std::cout << "Usage: " << argv[0] << "[-f filename] destination_host destination_port" << std::endl;
+        std::cout << "Usage: " << argv[0] << " [-f filename] destination_host destination_port" << std::endl;
         return 1;
     }
   }
 
   // Access the required arguments using optind.
   if (!(optind < argc)) {
-    std::cout << "Usage: " << argv[0] << "[-f filename] destination_host destination_port" << std::endl;
+    std::cout << "Usage: " << argv[0] << " [-f filename] destination_host destination_port" << std::endl;
     return 1;
   } else if (!(optind + 1 < argc)) {
-    std::cout << "Usage: " << argv[0] << "[-f filename] destination_host destination_port" << std::endl;
+    std::cout << "Usage: " << argv[0] << " [-f filename] destination_host destination_port" << std::endl;
     return 1;
   }
   
@@ -56,7 +60,7 @@ int main(int argc, char *argv[]) {
   hints.ai_family = AF_UNSPEC;  // we ask for both IPv4 and IPv6
   hints.ai_socktype = SOCK_DGRAM;
   
-  if ((rval = getaddrinfo(argv[1], argv[2], &hints, &results)) != 0) { // error
+  if ((rval = getaddrinfo(argv[optind], argv[optind+1], &hints, &results)) != 0) { // error
     std::cerr << "Error getting the destination address: " << gai_strerror(rval) << std::endl;
     return 2;
   }
@@ -105,8 +109,9 @@ int main(int argc, char *argv[]) {
     std::cout << "Enter a message: ";
     std::string input;
     std::getline(std::cin, input);
-    for (auto c : input) {
-      std::cout << "YEAH THIS AIN'T IT CHIEF";
+    for (char c : input) {
+      //p.add(static_cast<uint8_t>(c));
+      std::cout << "OOGA 1";
     }
     std::cout << "OOGA 2";
   }

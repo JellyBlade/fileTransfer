@@ -132,21 +132,21 @@ TEST_F(HeaderManagerTest, testLength) {
   hm->setLength(1);
   ASSERT_TRUE(hm->getLength() == 1);
   ASSERT_TRUE(hm->getHeader()[2] == 0x00 && hm->getHeader()[3] == 0x01);
-  hm->setLength(65535);
-  ASSERT_TRUE(hm->getLength() == 65535);
-  ASSERT_TRUE(hm->getHeader()[2] == 0xff && hm->getHeader()[3] == 0xff);
-  hm->setLength(32768);
-  ASSERT_TRUE(hm->getLength() == 32768);
-  ASSERT_TRUE(hm->getHeader()[2] == 0x80 && hm->getHeader()[3] == 0x00);
-  hm->setLength(10000);
-  ASSERT_TRUE(hm->getLength() == 10000);
-  ASSERT_TRUE(hm->getHeader()[2] == 0x27 && hm->getHeader()[3] == 0x10);
+  hm->setLength(512);
+  ASSERT_TRUE(hm->getLength() == 512);
+  ASSERT_TRUE(hm->getHeader()[2] == 0x02 && hm->getHeader()[3] == 0x00);
+  hm->setLength(64);
+  ASSERT_TRUE(hm->getLength() == 64);
+  ASSERT_TRUE(hm->getHeader()[2] == 0x00 && hm->getHeader()[3] == 0x40);
+  hm->setLength(258);
+  ASSERT_TRUE(hm->getLength() == 258);
+  ASSERT_TRUE(hm->getHeader()[2] == 0x01 && hm->getHeader()[3] == 0x02);
 
   // invalid lengths
   hm->setLength(-1);
   ASSERT_TRUE(hm->getLength() == 0);
   ASSERT_TRUE(hm->getHeader()[2] == 0x00 && hm->getHeader()[3] == 0x00);
-  hm->setLength(65536);
+  hm->setLength(513);
   ASSERT_TRUE(hm->getLength() == 0);
   ASSERT_TRUE(hm->getHeader()[2] == 0x00 && hm->getHeader()[3] == 0x00);
   hm->setLength(5083040);
@@ -174,12 +174,12 @@ TEST_F(HeaderManagerTest, testCombined) {
   ASSERT_TRUE(hm->getHeader()[1] == 0xf0);
 
   // setting last two bytes
-  hm->setLength(5000);
-  ASSERT_TRUE(hm->getHeader()[2] == 0x13 && hm->getHeader()[3] == 0x88);
+  hm->setLength(512);
+  ASSERT_TRUE(hm->getHeader()[2] == 0x02 && hm->getHeader()[3] == 0x00);
 
   // combining all four bytes together by shifting to the left 8 and ORing a few times.
   ASSERT_TRUE(((((((hm->getHeader()[0] << 8)
 	    | hm->getHeader()[1]) << 8)
 	    | hm->getHeader()[2]) << 8)
-	    | hm->getHeader()[3]) == 0xbaf01388);
+	    | hm->getHeader()[3]) == 0xbaf00200);
 }

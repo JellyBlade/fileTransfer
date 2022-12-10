@@ -2,6 +2,7 @@
 #include <vector>
 #include <cstdint>
 #include <fstream>
+#include <iostream>
 
 #include "PayloadManager.h"
 #include "FileManager.h"
@@ -16,18 +17,18 @@ FileManager::FileManager(std::string s, bool doWrite) {
 }
 
 void FileManager::read(std::string s) {
-  std::ifstream infile(s);
-  PayloadManager pm;
+  std::ifstream infile(s, std::ios_base::binary);
+  PayloadManager p = PayloadManager(512);
   uint8_t b;
 
   while (infile.read((char*)&b, sizeof(uint8_t))) {
-    if (pm.get().size() == 512) {
-      contents.push_back(pm);
-      pm = PayloadManager();
+    if (p.get().size() == 512) {
+      contents.push_back(p);
+      p = PayloadManager(512);
     }
-    pm.add(b);
+    p.add(b);
   }
-  contents.push_back(pm);
+  contents.push_back(p);
   infile.close();
 }
 

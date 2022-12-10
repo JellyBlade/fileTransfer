@@ -15,10 +15,10 @@
 // argv[0] is the executable name
 int main(int argc, char *argv[]) {
   int sock, rval, byte_count, opt;
-  struct addrinfo hints,results, *ptr;
+  struct addrinfo hints, *results, *ptr;
   socklen_t fromlen;
   struct sockaddr_storage fromaddr;
-  std::vector<uint8_t> packet(512);
+  std::vector<uint8_t> packet(528);
   FileManager f;
   bool fileFlag = false;
   std::string fileName = "";
@@ -30,24 +30,20 @@ int main(int argc, char *argv[]) {
         fileName = optarg;
         break;
       case ':':
-        std::cout << "Usage: " << argv[0] << "[-f filename] receive_port" << std::endl;
+        std::cout << "Usage: " << argv[0] << " [-f filename] receive_port" << std::endl;
         return 1;
       case '?':
         // Handle unknown option.
-        std::cout << "Usage: " << argv[0] << "[-f filename] receive_port" << std::endl;
+        std::cout << "Usage: " << argv[0] << " [-f filename] receive_port" << std::endl;
         return 1;
     }
   }
 
   // Access the required arguments using optind.
   if (!(optind < argc)) {
-    std::cout << "Usage: " << argv[0] << "[-f filename] receive_port" << std::endl;
-    return 1;
-  } else if (!(optind + 1 < argc)) {
-    std::cout << "Usage: " << argv[0] << "[-f filename] receive_port" << std::endl;
+    std::cout << "Usage: " << argv[0] << " [-f filename] receive_port" << std::endl;
     return 1;
   }
-
   
   // if we obtain the data from getaddrinfo, we might as well use it to open the socket
 
@@ -57,7 +53,7 @@ int main(int argc, char *argv[]) {
   hints.ai_family = AF_UNSPEC;  // we ask for both IPv4 and IPv6
   hints.ai_socktype = SOCK_DGRAM;
   
-  if ((rval = getaddrinfo("localhost", argv[1], &hints, &results)) != 0) { // error
+  if ((rval = getaddrinfo("localhost", argv[optind], &hints, &results)) != 0) { // error
     std::cerr << "Error getting the destination address: " << gai_strerror(rval) << std::endl;
     return 2;
   }
