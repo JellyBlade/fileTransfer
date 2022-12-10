@@ -82,51 +82,57 @@ int main(int argc, char *argv[]) {
   // initialize fromlen to prevent EINVAL from being thrown by sendto()
   fromlen = sizeof(fromaddr);
 
-  byte_count = recvfrom(sock, packet.data(), packet.size(), 0, (sockaddr*)(&fromaddr), &fromlen);
-  if (byte_count == -1) {
-    std::cout << "Error occurred" << std::endl;
-    std::cout << std::strerror(errno) << std::endl;
-  }
-  std::cout << "Received " << byte_count << " bytes" << std::endl;
-  packet.resize(byte_count);
-  
-  PacketManager pm;
-  pm.setPacket(packet);
-  pm.rebuildPacket();
-  
-  if (pm.isTrunc()) {
-    std::cout << "NOTACK" << std::endl;
-  }
-  if (pm.getHeader().getType() > 3 || pm.getHeader().getType() < 1) {
-    std::cout << "Packet ignored" << std::endl;
-  }
-  CRCManager ch(pm.getHeader());
-  CRCManager ch2(pm.getHeader());
-  if (!(pm.getCRC(1) == ch)) {
-    std::cout << "Header Checksum failed!" << std::endl;
-    std::cout << pm.getCRC(1).getCRC() << std::endl;
-    std::cout << ch.getCRC() << std::endl;
-    std::cout << ch2.getCRC() << std::endl;
-  }
-  CRCManager cp(pm.getPayload());
-  CRCManager cp2(pm.getPayload());
-  if (!(pm.getCRC(2) == cp)) {
-    std::cout << "Payload checksum failed!" << std::endl;
-    std::cout << pm.getCRC(2).getCRC() << std::endl;
-    std::cout << cp.getCRC() << std::endl;
-    std::cout << cp2.getCRC() << std::endl;
-  }
+  std::vector<PayloadManager> payloads;
+
+  do {
+    byte_count = recvfrom(sock, packet.data(), packet.size(), 0, (sockaddr*)(&fromaddr), &fromlen);
+    if (byte_count == -1) {
+      std::cout << "Error occurred" << std::endl;
+      std::cout << std::strerror(errno) << std::endl;
+    }
+    std::cout << "Received " << byte_count << " bytes" << std::endl;
+    packet.resize(byte_count);
+    
+    PacketManager pm;
+    pm.setPacket(packet);
+    pm.rebuildPacket();
+    
+    if (pm.isTrunc()) {
+      std::cout << "NOTACK" << std::endl;
+    }
+    if (pm.getHeader().getType() > 3 || pm.getHeader().getType() < 1) {
+      std::cout << "Packet ignored" << std::endl;
+    }
+    CRCManager ch(pm.getHeader());
+    CRCManager ch2(pm.getHeader());
+    if (!(pm.getCRC(1) == ch)) {
+      std::cout << "Header Checksum failed!" << std::endl;
+      std::cout << pm.getCRC(1).getCRC() << std::endl;
+      std::cout << ch.getCRC() << std::endl;
+      std::cout << ch2.getCRC() << std::endl;
+    }
+    CRCManager cp(pm.getPayload());
+    CRCManager cp2(pm.getPayload());
+    if (!(pm.getCRC(2) == cp)) {
+      std::cout << "Payload checksum failed!" << std::endl;
+      std::cout << pm.getCRC(2).getCRC() << std::endl;
+      std::cout << cp.getCRC() << std::endl;
+      std::cout << cp2.getCRC() << std::endl;
+    }
+
+    if (fileFlag) {
+      payloads.push_back(pm.getPayload());
+    } else {
+      for (auto c : pm.getPayload().get()) {
+        std::cout << c;
+      }
+      std::cout << std::endl;
+    }
+  } while (byte_count == 528);
 
   if (fileFlag) {
-    std::vector<PayloadManager> payloads;
-    payloads.push_back(pm.getPayload());
     f.setContents(payloads);
     f.write(fileName);
-  } else {
-    for (auto c : pm.getPayload().get()) {
-      std::cout << c;
-    }
-    std::cout << std::endl;
   }
   
   close(sock);

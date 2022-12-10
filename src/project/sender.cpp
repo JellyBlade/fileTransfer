@@ -18,13 +18,8 @@
 int main(int argc, char *argv[]) {
   int sock, rval, byte_count, opt;
   struct addrinfo hints, *results, *ptr;
-  PacketManager pm;
-  HeaderManager h;
-  CRCManager crc1;
-  CRCManager crc2;
-  TimestampManager t;
   FileManager f;
-  PayloadManager p;
+  std::vector<PacketManager> packets;
   bool fileFlag = false;
   std::string fileName = "";
 
@@ -79,41 +74,50 @@ int main(int argc, char *argv[]) {
     return 3;
   }
 
-  // Create packet
-  h.setType(1);
-  h.setLength(p.get().size());
-  h.setSeqNum(0);
-  h.setTR(0);
-  h.setWindow(1);
-
   if (fileFlag) {
     f.read(fileName);
-    pm.setPayload(f.getContents()[pm.getSeq()]);
-  } else {
+    for (int i = 0; i < f.getContents().size(); i++) {
+      HeaderManager h;
+      CRCManager crc1;
+      CRCManager crc2;
+      PacketManager pm;
+      TimestampManager t;
+      PayloadManager p = f.getContents()[i];
+
+      h.setType(1);
+      h.setLength(p.get().size());
+      h.setSeqNum(i);
+      h.setTR(0);
+      h.setWindow(1);
+
+      crc1.generate(h.getHeader());
+      crc2.generate(p.get());
+
+      pm.setCRC(crc1);
+      pm.setCRC(crc2, 2);
+      pm.setHeader(h);
+      pm.setPayload(p);
+      pm.setTimestamp(t);
+      pm.createPacket();
+      packets.push_back(pm);
+    }
+  } else { // TODO: split message into multiple payloads
     std::cout << "Enter a message: ";
     std::string input;
     std::getline(std::cin, input);
     for (auto c : input) {
-      p.add(c);
+      std::cout << "YEAH THIS AIN'T IT CHIEF";
     }
-    pm.setPayload(p);
+    std::cout << "OOGA 2";
   }
 
-  crc1.generate(h.getHeader());
-  crc2.generate(pm.getPayload().get());
-
-  pm.setCRC(crc1);
-  pm.setCRC(crc2, 2);
-  pm.setHeader(h);
-  pm.setPayload(p);
-  pm.setTimestamp(t);
-  pm.createPacket();
-
-int sent = sendto(sock, pm.getPacket().data(), pm.getPacket().size(), 0, ptr->ai_addr, ptr->ai_addrlen);
-  if (sent == -1) {
-    std::cout << std::strerror(errno) << std::endl;
-  }
-  std::cout << sent << std::endl;
+for (int i = 0; i < packets.size(); i++) {
+  int sent = sendto(sock, packets[i].getPacket().data(), packets[i].getPacket().size(), 0, ptr->ai_addr, ptr->ai_addrlen);
+    if (sent == -1) {
+      std::cout << std::strerror(errno) << std::endl;
+    }
+    std::cout << sent << std::endl;
+}
 
   close(sock);
 }
