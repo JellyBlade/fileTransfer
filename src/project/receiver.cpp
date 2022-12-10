@@ -80,6 +80,7 @@ int main(int argc, char *argv[]) {
 
   std::vector<PayloadManager> payloads;
 
+  int x = 0;
   do {
     byte_count = recvfrom(sock, packet.data(), packet.size(), 0, (sockaddr*)(&fromaddr), &fromlen);
     if (byte_count == -1) {
@@ -89,6 +90,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Received " << byte_count << " bytes" << std::endl;
     packet.resize(byte_count);
     
+    x++;
     PacketManager pm;
     pm.setPacket(packet);
     pm.rebuildPacket();
@@ -130,6 +132,7 @@ int main(int argc, char *argv[]) {
     f.setContents(payloads);
     f.write(fileName);
   }
+  std::cout << "Packets received: " << x << std::endl;
   
   close(sock);
 }

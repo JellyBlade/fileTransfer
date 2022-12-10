@@ -76,6 +76,7 @@ int main(int argc, char *argv[]) {
 
   if (fileFlag) {
     f.read(fileName);
+    f.write(fileName + "_sent");
     for (int i = 0; i < f.getContents().size(); i++) {
       HeaderManager h;
       CRCManager crc1;
@@ -113,12 +114,13 @@ int main(int argc, char *argv[]) {
   }
 
 for (int i = 0; i < packets.size(); i++) {
+  usleep(100);
   int sent = sendto(sock, packets[i].getPacket().data(), packets[i].getPacket().size(), 0, ptr->ai_addr, ptr->ai_addrlen);
     if (sent == -1) {
       std::cout << std::strerror(errno) << std::endl;
     }
-    std::cout << sent << std::endl;
 }
+  std::cout << "Packets sent: " << packets.size() << std::endl;
 
   close(sock);
 }
