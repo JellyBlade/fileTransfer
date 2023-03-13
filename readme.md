@@ -1,4 +1,9 @@
-Tyler Hippard, Landon Constantin
+# fileTransfer
+By Tyler Hippard, Landon Constantin
+
+Sender/receiver programs written for CPSC 3780 at University of Lethbridge.
+
+It works well enough to be able to transmit files of a decent size (tested with 6MB gif) assuming a stable network (no packet loss or trimming)
 
 To compile:
 > make
